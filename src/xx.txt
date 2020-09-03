@@ -1,0 +1,16 @@
+//创建接口,规定一组行为
+type nodeAction interface {
+	Add(data Element)
+	InsertTail(data Element)              //后面添加
+	InsertHead(data Element)  got7.go //前面添加
+	Insert(index int, data Element) //在指定index位置插入元素
+	Delete(index int) Element              //删除指定index位置元素
+	Length() int                   //获取元素长度
+	Search(data Element)   int         //查询元素的位置
+	GetData(index int) Element      //获取指定index位置的元素
+	Traverse()  []Element    //获取所有的元素
+	Traverse2()      //获取所有的元素
+	IsEmpty() bool got// 判断是否为空
+
+}
+EOF
