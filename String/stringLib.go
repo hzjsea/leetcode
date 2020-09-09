@@ -33,31 +33,8 @@ func main()  {
 	ss="hello - world"
 	fmt.Println(strings.FieldsFunc(ss,unicode.IsSpace))
 
-
-	// 分割字符串
-	ss = "hello,world"
-	fmt.Println(strings.Split(ss,",")) // ["hello" "world"]
-	fmt.Println(strings.SplitAfter(ss,",")) // ["hello," "world"]
-	// 分割前面几个
-	fmt.Println(strings.SplitAfterN(ss,",",1))  // [hello,world]
-
-
-	// 字符串是否有某个前缀(prefix)或后缀(suffix)
-	if strings.HasPrefix(ss,"hello"){
-		fmt.Println("hello is head")
-	}
-	if strings.HasSuffix(ss,"world"){
-		fmt.Println("world is tail")
-	}
-
-
-	qq := []string{"one","two","three"}
- 	fmt.Println(JoinString(qq))
-
-	for k,v := range("ddsdsds"){
-		fmt.Println(k,v)
-	}
-
+	ss="foo,bar,baz"
+	fmt.Println(SplitNString(ss,1,","))
 
 
 }
@@ -109,6 +86,7 @@ func ContainsRuneChar(ss string,char rune) bool{
 //		s = s[i+len(substr):]
 //	}
 //}
+
 // 计算某一个字符char 在字符串中出现的次数
 func CountString(ss string,char string ) int{
 	return strings.Count(ss,char)
@@ -133,5 +111,71 @@ func JoinString(ss []string) string{
 func RepeatString(ss string) string{
 	return strings.Repeat(ss,2)
 }
+
+// 分割字符串 返回字符串数组
+func SplitString(ss string,seq string) []string{
+	return strings.Split(ss,seq)
+	//fmt.Printf("%q\n", strings.Split("foo,bar,baz", ","))
+	//["foo" "bar" "baz"]
+}
+
+// 分割字符串 返回字符串数组保留分割符
+func SplitAfterString(ss string,seq string ) []string{
+	return strings.SplitAfter(ss,seq)
+	//	fmt.Printf("%q\n", strings.SplitAfter("foo,bar,baz", ","))
+	//	["foo," "bar," "baz"]
+}
+
+// 分割字符换，返回N个元素
+// -1 全部分割
+// 0 返回空字符串
+// 1 返回原字符串数组
+func SplitNString(ss string,index int,seq string) []string{
+	return strings.SplitN(ss,seq,index)
+}
+
+// 字符串是否有某个前缀或后缀
+func HasPrefixString(s,prefix string) bool{
+	return strings.HasSuffix(s,prefix)
+}
+
+// 字符串是否存在某个后缀
+func HasSuffixString(s,prefix string)bool{
+	return strings.HasSuffix(s,prefix)
+}
+
+// 字符串替换
+// -1 表示全部替换
+// 0 表示不替换
+// >0 表示替换前面n位
+func ReplaceString(now_s,old_s,new_s string,n int) string{
+	return strings.Replace(now_s,old_s,new_s,n)
+}
+
+// 字符串子串替换
+func ReplaceAllString(now_s,old_s,new_s string) string{
+	return strings.ReplaceAll(now_s,old_s,new_s)
+}
+
+// 大小写替换
+
+func ToLowerString(s string) string{
+	return strings.ToLower(s)
+}
+
+func ToUpper(s string) string{
+	return strings.ToUpper(s)
+}
+
+// 标题大小写替换
+func TitleString(s string) string{
+	return strings.Title(s)
+}
+
+// 标题处理
+func ToTitle(s string) string{
+	return strings.ToTitle(s)
+}
+
 
 //https://books.studygolang.com/The-Golang-Standard-Library-by-Example/chapter02/02.1.html

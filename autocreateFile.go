@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func fileAction() {
@@ -42,44 +43,63 @@ func fileAction() {
 	os.Rename("./2.txt", "./2_new.txt")
 }
 
-
-
-
-
-func leetcodeStringFileTemplateCreate(basefile string,filename string,gofilename string){
-	if gofilename == "None"{
-		gofilename = "xx.go"
+// 检测文件或者文件夹是否存在
+func Exists(path string) bool{
+	_,err := os.Stat(path) // 获取文件信息
+	if err != nil{
+		if  os.IsExist(err){ // 查询这个文件错误是不是系统提示的文件不存在错误
+			return true
+		}
+		return false
 	}
+	return true
+}
+
+// 判断给定路径是否为文件夹
+func IsDir(path string) bool{
+	s,err := os.Stat(path)
+	if err != nil{
+		return false
+	}
+	return s.IsDir()
+}
+
+// 判断所给路径是否为文件
+func IsFile(path string) bool {
+	return !IsDir(path)
+}
+
+
+func leetcodeStringFileTemplateCreate(filename string,gofilename string){
 	filePath,_:=os.Getwd()
-	filePath  =  filePath + "/" + basefile
 	newFilePath := filePath + "/" +filename
-	fmt.Println(newFilePath)
-	if os.Mkdir(newFilePath,os.ModePerm) == nil{
-		os.Create(newFilePath +"/"+gofilename)
+	goFilePath := newFilePath + "/" + gofilename
+	if !Exists(newFilePath) &&  !Exists(goFilePath){
+		if strings.Contains(filename,"/"){
+			os.MkdirAll(newFilePath,os.ModePerm)
+			os.Create(newFilePath+"/"+gofilename)
+		} else {
+			os.Create(newFilePath +"/"+gofilename)
+		}
 	} else {
-		os.RemoveAll(newFilePath)
-		os.Mkdir(newFilePath,os.ModePerm)
-		os.Create(newFilePath+"/"+gofilename)
+		fmt.Printf("%s 已经存在,请重新输入\n%s 已经存在,请重新输入\n",newFilePath,goFilePath)
 	}
 }
 
 var (
-	n int
 	h bool
 	q *bool
 	f string
 	t string
-	c string
 	b string
 )
 
 func init() {
 	q = flag.Bool("q", false, "Exit")
 	flag.BoolVar(&h, "h", false, "Show help")
-	flag.StringVar(&f,"f", "s", "Default string")
-	flag.StringVar(&t,"t","xx.go","default string")
+	flag.StringVar(&f,"f", "s", "direct file")
+	flag.StringVar(&t,"t","zz","go file template")
 	flag.StringVar(&b,"b","xx","set basefile")
-
 }
 
 
@@ -89,10 +109,14 @@ func main()  {
 		flag.Usage()
 	} else {
 		if *q {
-			fmt.Println("q is ", *q)
+			fmt.Println("is use -q the *q result is true, example like this ", *q)
 			os.Exit(0)
 		}
-		tt := f+".go"
-		leetcodeStringFileTemplateCreate(b,f,tt)
+		if  t == "zz"{
+			list := strings.Split(f,"/")
+			 t = list[len(list)-1:][0]+".go"
+		}
+
+		leetcodeStringFileTemplateCreate(f,t)
 	}
 }
