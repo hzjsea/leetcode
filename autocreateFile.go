@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"os"
@@ -70,6 +71,28 @@ func IsFile(path string) bool {
 }
 
 
+func WirteThingsToFile(path string,gofilename string) {
+	file, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE, 0666)
+	if err != nil{
+		panic(nil)
+	}
+	defer file.Close()
+	writer := bufio.NewWriter(file)
+	writer.WriteString("package main\n")
+	writer.WriteString("func main(){}\n")
+	var funcstring string
+	if strings.Contains(gofilename,".go"){
+		funcstring = "func "+strings.ReplaceAll(gofilename,".go","")+"(){\n\n"
+	} else {
+		funcstring = "func "+gofilename+"(){\n\n"
+	}
+	writer.WriteString(funcstring)
+	writer.WriteString("\n\n")
+	writer.WriteString("}")
+	writer.Flush()
+}
+
+
 func leetcodeStringFileTemplateCreate(filename string,gofilename string){
 	filePath,_:=os.Getwd()
 	newFilePath := filePath + "/" +filename
@@ -78,6 +101,7 @@ func leetcodeStringFileTemplateCreate(filename string,gofilename string){
 		if strings.Contains(filename,"/"){
 			os.MkdirAll(newFilePath,os.ModePerm)
 			os.Create(newFilePath+"/"+gofilename)
+			WirteThingsToFile(newFilePath+"/"+gofilename,gofilename)
 		} else {
 			os.Create(newFilePath +"/"+gofilename)
 		}
@@ -116,7 +140,6 @@ func main()  {
 			list := strings.Split(f,"/")
 			 t = list[len(list)-1:][0]+".go"
 		}
-
 		leetcodeStringFileTemplateCreate(f,t)
 	}
 }
